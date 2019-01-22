@@ -1,7 +1,7 @@
-var difference = require('lodash.difference');
-var trunc = require('math-trunc');
+var difference = require("lodash.difference");
+var trunc = require("math-trunc");
 
-var isNode = typeof window === 'undefined';
+var isNode = typeof window === "undefined";
 var constants = {
   MS_IN_DAY: 1000 * 60 * 60 * 24,
   MS_IN_HOUR: 1000 * 60 * 60,
@@ -9,14 +9,13 @@ var constants = {
   MS_IN_SECOND: 1000,
   WEEKEND_DAYS: [6, 0],
   WORK_DAYS: [1, 2, 3, 4, 5],
-  ALL_DAYS: [0, 1, 2, 3, 4, 5, 6],
-}
+  ALL_DAYS: [0, 1, 2, 3, 4, 5, 6]
+};
 
 var instadate = {
-
   utc: utc,
 
-  noon: function (d) {
+  noon: function(d) {
     var date;
     if (d) {
       date = new Date(d);
@@ -27,53 +26,64 @@ var instadate = {
     return date;
   },
 
+  midnight: function(d) {
+    var date = d ? new Date(d) : new Date();
+    var time = Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    );
+    date.setTime(time);
+    return date;
+  },
+
   /* Difference between dates */
 
-  differenceInDates: function (d1, d2) {
+  differenceInDates: function(d1, d2) {
     return trunc((utcDate(d2) - utcDate(d1)) / constants.MS_IN_DAY);
   },
 
-  differenceInDays: function (d1, d2) {
+  differenceInDays: function(d1, d2) {
     return trunc((utc(d2) - utc(d1)) / constants.MS_IN_DAY);
   },
 
-  differenceInHours: function (d1, d2) {
+  differenceInHours: function(d1, d2) {
     return trunc((utc(d2) - utc(d1)) / constants.MS_IN_HOUR);
   },
 
-  differenceInMinutes: function (d1, d2) {
+  differenceInMinutes: function(d1, d2) {
     return trunc((utc(d2) - utc(d1)) / constants.MS_IN_MINUTE);
   },
 
-  differenceInSeconds: function (d1, d2) {
+  differenceInSeconds: function(d1, d2) {
     return trunc((utc(d2) - utc(d1)) / constants.MS_IN_SECOND);
   },
 
-  differenceInWeekendDays: function (d1, d2) {
+  differenceInWeekendDays: function(d1, d2) {
     var period = instadate.differenceInDays(d1, d2);
-    return instadate.weekendDaysInPeriod(d1.getDay(), period)
+    return instadate.weekendDaysInPeriod(d1.getDay(), period);
   },
 
-  differenceInWorkDays: function (d1, d2) {
+  differenceInWorkDays: function(d1, d2) {
     var period = instadate.differenceInDays(d1, d2);
-    return instadate.workDaysInPeriod(d1.getDay(), period)
+    return instadate.workDaysInPeriod(d1.getDay(), period);
   },
 
   /* Adding time to dates */
 
-  addYears: function (d, years) {
+  addYears: function(d, years) {
     var date = new Date(d);
     date.setFullYear(date.getFullYear() + years);
     return date;
   },
 
-  addMonths: function (d, months) {
+  addMonths: function(d, months) {
     var date = new Date(d);
     date.setMonth(date.getMonth() + months);
     return date;
   },
 
-  addDays: function (d, days) {
+  addDays: function(d, days) {
     var date = new Date(d);
     date.setDate(date.getDate() + days);
     return date;
@@ -91,13 +101,13 @@ var instadate = {
     return date;
   },
 
-  addSeconds: function (d, seconds) {
+  addSeconds: function(d, seconds) {
     var date = new Date(d);
     date.setSeconds(date.getSeconds() + seconds);
     return date;
   },
 
-  addMilliseconds: function (d, ms) {
+  addMilliseconds: function(d, ms) {
     var date = new Date(d);
     date.setMilliseconds(date.getMilliseconds() + ms);
     return date;
@@ -105,27 +115,27 @@ var instadate = {
 
   /* Comparison */
 
-  isSameYear: function (a, b) {
+  isSameYear: function(a, b) {
     return a && b && a.getFullYear() === b.getFullYear();
   },
 
-  isSameMonth: function (a, b) {
+  isSameMonth: function(a, b) {
     return instadate.isSameYear(a, b) && a.getMonth() === b.getMonth();
   },
 
-  isSameDay: function (a, b) {
+  isSameDay: function(a, b) {
     return instadate.isSameMonth(a, b) && a.getDate() === b.getDate();
   },
 
-  equal: function (d1, d2) {
+  equal: function(d1, d2) {
     return d1 && d2 && !(d1 - d2);
   },
 
-  min: function (d1, d2) {
+  min: function(d1, d2) {
     return d1 - d2 < 0 ? d1 : d2;
   },
 
-  max: function (d1, d2) {
+  max: function(d1, d2) {
     return d1 - d2 > 0 ? d1 : d2;
   },
 
@@ -137,29 +147,29 @@ var instadate = {
       end = start;
       start = temp;
     }
-    var result = []
-      , diff = instadate.differenceInDates(start, end);
+    var result = [],
+      diff = instadate.differenceInDates(start, end);
     for (var i = 0; i <= diff; i++) {
       result.push(instadate.addDays(start, i));
     }
     return result;
   },
 
-  isoDateString: function (date) {
+  isoDateString: function(date) {
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
     var day = date.getDate();
     if (month < 10) {
-      month = '0' + month;
+      month = "0" + month;
     }
     if (day < 10) {
-      day = '0' + day;
+      day = "0" + day;
     }
 
-    return year + '-' + month + '-' + day;
+    return year + "-" + month + "-" + day;
   },
 
-  parseISOString: function (isoString) {
+  parseISOString: function(isoString) {
     if (isNode) {
       return new Date(isoString);
     } else {
@@ -167,41 +177,46 @@ var instadate = {
     }
   },
 
-  resetTimezoneOffset: function (date) {
+  resetTimezoneOffset: function(date) {
     return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
   },
 
-  firstDateInMonth: function (d) {
+  firstDateInMonth: function(d) {
     var date = new Date(d);
     date.setDate(1);
     return date;
   },
 
-  lastDateInMonth: function (d) {
+  lastDateInMonth: function(d) {
     var date = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    date.setHours(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+    date.setHours(
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds(),
+      d.getMilliseconds()
+    );
     return date;
   },
 
-  isWeekendDay: function (day) {
+  isWeekendDay: function(day) {
     return constants.WEEKEND_DAYS.indexOf(day) !== -1;
   },
 
-  isWorkDay: function (day) {
+  isWorkDay: function(day) {
     return !instadate.isWeekendDay(day);
   },
 
-  isWeekendDate: function (date) {
+  isWeekendDate: function(date) {
     return instadate.isWeekendDay(date.getDay());
   },
 
-  isWorkDate: function (date) {
+  isWorkDate: function(date) {
     return !instadate.isWeekendDate(date);
   },
 
-  setWeekendDays: function (days) {
+  setWeekendDays: function(days) {
     if (!(days instanceof Array)) {
-      throw new Error('Weekend days needs to be an array');
+      throw new Error("Weekend days needs to be an array");
     }
     constants.WEEKEND_DAYS = days;
     constants.WORK_DAYS = difference([0, 1, 2, 3, 4, 5, 6], days);
@@ -214,8 +229,8 @@ var instadate = {
     if (!days) {
       days = constants.ALL_DAYS;
     }
-    var total = 0
-      , direction = length >= 0 ? 1 : -1;
+    var total = 0,
+      direction = length >= 0 ? 1 : -1;
 
     function check(i) {
       var absShift = Math.abs(firstDay + i);
@@ -238,76 +253,104 @@ var instadate = {
     return total;
   },
 
-  weekendDaysInPeriod: function (firstDay, length) {
+  weekendDaysInPeriod: function(firstDay, length) {
     return instadate.daysInPeriod(firstDay, length, constants.WEEKEND_DAYS);
   },
 
-  workDaysInPeriod: function (firstDay, length) {
+  workDaysInPeriod: function(firstDay, length) {
     return instadate.daysInPeriod(firstDay, length, constants.WORK_DAYS);
   },
 
   /* isAfter & isBefore */
-  isAfter: function (a, b) {
-    return a.getTime() > b.getTime()
+  isAfter: function(a, b) {
+    return a.getTime() > b.getTime();
   },
 
-  isBefore: function (a, b) {
-    return a.getTime() < b.getTime()
+  isBefore: function(a, b) {
+    return a.getTime() < b.getTime();
   },
 
-  isYearAfter: function (a, b) {
+  isYearAfter: function(a, b) {
     return a.getFullYear() > b.getFullYear();
   },
 
-  isMonthAfter: function (a, b) {
-    return instadate.isYearAfter(a, b) ||
-      a.getMonth() > b.getMonth() && instadate.isSameYear(a, b);
+  isMonthAfter: function(a, b) {
+    return (
+      instadate.isYearAfter(a, b) ||
+      (a.getMonth() > b.getMonth() && instadate.isSameYear(a, b))
+    );
   },
 
-  isDayAfter: function (a, b) {
-    return instadate.isMonthAfter(a, b) ||
-      a.getDate() > b.getDate() && instadate.isSameMonth(a, b);
+  isDayAfter: function(a, b) {
+    return (
+      instadate.isMonthAfter(a, b) ||
+      (a.getDate() > b.getDate() && instadate.isSameMonth(a, b))
+    );
   },
 
-  isYearBefore: function (a, b) {
+  isYearBefore: function(a, b) {
     return instadate.isYearAfter(b, a);
   },
 
-  isMonthBefore: function (a, b) {
+  isMonthBefore: function(a, b) {
     return instadate.isMonthAfter(b, a);
   },
 
-  isDayBefore: function (a, b) {
+  isDayBefore: function(a, b) {
     return instadate.isDayAfter(b, a);
   },
 
   /* isBetween */
 
-  isYearBetween: function (d, start, end) {
-    return isBetween(d, start, end, instadate.isYearBefore, instadate.isYearAfter);
+  isYearBetween: function(d, start, end) {
+    return isBetween(
+      d,
+      start,
+      end,
+      instadate.isYearBefore,
+      instadate.isYearAfter
+    );
   },
 
-  isMonthBetween: function (d, start, end) {
-    return isBetween(d, start, end, instadate.isMonthBefore, instadate.isMonthAfter);
+  isMonthBetween: function(d, start, end) {
+    return isBetween(
+      d,
+      start,
+      end,
+      instadate.isMonthBefore,
+      instadate.isMonthAfter
+    );
   },
 
-  isDayBetween: function (d, start, end) {
-    return isBetween(d, start, end, instadate.isDayBefore, instadate.isDayAfter);
+  isDayBetween: function(d, start, end) {
+    return isBetween(
+      d,
+      start,
+      end,
+      instadate.isDayBefore,
+      instadate.isDayAfter
+    );
   },
 
-  isoWeekDay: function (d) {
+  isoWeekDay: function(d) {
     return d.getDay() || 7;
   },
 
-  daysInMonth: function (month, year) {
+  daysInMonth: function(month, year) {
     return new Date(year, month + 1, 0).getDate();
-  },
-
+  }
 };
 
 function utc(d) {
-  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(),
-    d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+  return Date.UTC(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate(),
+    d.getHours(),
+    d.getMinutes(),
+    d.getSeconds(),
+    d.getMilliseconds()
+  );
 }
 
 function utcDate(d) {
@@ -321,6 +364,6 @@ function isBetween(d, start, end, beforeFn, afterFn) {
     start = temp;
   }
   return beforeFn(start, d) && afterFn(end, d);
-};
+}
 
 module.exports = instadate;
